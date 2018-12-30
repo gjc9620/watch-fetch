@@ -1,0 +1,48 @@
+{
+  "name": "watch-fetch",
+  "version": "0.0.1",
+  "main": "lib/index.js",
+  "browserslist": [
+    "cover 99.5%",
+    "maintained node versions",
+    "ie 6-8",
+    "Safari >= 7",
+    "iOS >= 7",
+    "Firefox > 20",
+    "Chrome > 50",
+    "not dead"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:gjc9620/watch-fetch.git"
+  },
+  "keywords": [
+    "watch",
+    "fetch",
+    "za",
+    "fetchApi"
+  ],
+  "author": "992758355@qq.com",
+  "license": "MIT",
+  "scripts": {
+    "test": "node ./test/test.js",
+    "build": "rm -rf lib/* && npx babel index.js --out-file ./lib/index.js --source-maps"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "babel-loader": "^8.0.4",
+    "html-webpack-plugin": "^3.2.0",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "string-template": "^1.0.0",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "^7.2.0"
+  }
+}
