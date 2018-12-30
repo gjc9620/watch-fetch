@@ -8,6 +8,7 @@ function checkStatus(response) {
   return Promise.reject(error);
 }
 
+
 function watch(
   {
     parser = () => {},
@@ -34,17 +35,17 @@ function watch(
 }
 
 export default function watchBrowserFetch(fetchApi, watchConfig = {}) {
-  const originFetch = fetchApi.fetch;
+  const newFetchApi = Object.create(fetchApi);
   
-  fetchApi.fetch = function watchFetch(options) {
+  newFetchApi.fetch = function watchFetch(options) {
     const { watchBefore, watchAfter } = watch(watchConfig);
     
-    return originFetch.call({
+    return fetchApi.fetch.call({
       ...this,
       before: watchBefore(this.before),
       checkStatus: watchAfter(this.checkStatus || checkStatus)(+Date.now()),
     }, options);
   };
   
-  return fetchApi;
+  return newFetchApi;
 }

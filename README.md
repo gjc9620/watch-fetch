@@ -7,7 +7,7 @@ react-string-template is simple string template with react
 
 ``` js
 
-  watchFetch(
+  watchedFetchAPI = watchFetch(
     new FetchAPI({
       middlewares: [],
     }),
