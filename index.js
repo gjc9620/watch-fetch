@@ -48,13 +48,15 @@ function watch(
   };
 }
 
+
+
 export default function watchBrowserFetch(fetchApi, watchConfig = {}) {
-  const newFetchApi = Object.create(fetchApi);
+  const { fetch } = fetchApi;
   
-  newFetchApi.fetch = function watchFetch(options) {
+  fetchApi.fetch = function watchFetch(options) {
     const { watchBefore, watchAfter, watchCache } = watch(watchConfig);
     
-    return fetchApi.fetch.call({
+    return fetch.call({
       ...this,
       before: watchBefore(this.before),
       cache: watchCache(this.cache),
@@ -62,5 +64,6 @@ export default function watchBrowserFetch(fetchApi, watchConfig = {}) {
     }, options);
   };
   
-  return newFetchApi;
+  
+  return fetchApi;
 }
