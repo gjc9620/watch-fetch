@@ -15,18 +15,32 @@ function watch(
     config = {},
   } = {}
 ) {
+  let fetchOption;
   let request;
   return {
     watchBefore(originBefore = () => {}) {
       return function before(option) {
-        request = option;
+        fetchOption = option;
         originBefore();
+      };
+    },
+    watchCache(originCache = () => {}) {
+      return function hackCache(url, option) {
+        request = { url, option };
+        return originCache();
       };
     },
     watchAfter(originAfter = () => {}) {
       return function after(startTime) {
         return function parseData(response) {
-          parser({ startTime, endTime: +Date.now(), request, response: response.clone() }, config);
+          parser({
+            startTime,
+            endTime: +Date.now(),
+            fetchOption,
+            request,
+            response: response.clone(),
+          }, config);
+          
           return originAfter(response);
         };
       };
@@ -38,11 +52,12 @@ export default function watchBrowserFetch(fetchApi, watchConfig = {}) {
   const newFetchApi = Object.create(fetchApi);
   
   newFetchApi.fetch = function watchFetch(options) {
-    const { watchBefore, watchAfter } = watch(watchConfig);
+    const { watchBefore, watchAfter, watchCache } = watch(watchConfig);
     
     return fetchApi.fetch.call({
       ...this,
       before: watchBefore(this.before),
+      cache: watchCache(this.cache),
       checkStatus: watchAfter(this.checkStatus || checkStatus)(+Date.now()),
     }, options);
   };
