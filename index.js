@@ -45,6 +45,22 @@ function watch(
         };
       };
     },
+    watchException(originException = () => {}) {
+      return function after(startTime) {
+        return function exception(e) {
+          parser({
+            startTime,
+            endTime: +Date.now(),
+            fetchOption,
+            request,
+            response: undefined,
+            exception: e,
+          }, config);
+          
+          return originException(e);
+        };
+      }
+    }
   };
 }
 
@@ -54,16 +70,16 @@ export default function watchBrowserFetch(fetchApi, watchConfig = {}) {
   const { fetch } = fetchApi;
   
   fetchApi.fetch = function watchFetch(options) {
-    const { watchBefore, watchAfter, watchCache } = watch(watchConfig);
+    const { watchBefore, watchAfter, watchCache, watchException } = watch(watchConfig);
     
     return fetch.call({
       ...this,
       before: watchBefore(this.before),
       cache: watchCache(this.cache),
       checkStatus: watchAfter(this.checkStatus || checkStatus)(+Date.now()),
+      exception: watchException(this.exception)(+Date.now()),
     }, options);
   };
-  
   
   return fetchApi;
 }
