@@ -21,13 +21,13 @@ function watch(
     watchBefore(originBefore = () => {}) {
       return function before(option) {
         fetchOption = option;
-        originBefore();
+        originBefore(fetchOption);
       };
     },
     watchCache(originCache = () => {}) {
       return function hackCache(url, option) {
         request = { url, option };
-        return originCache();
+        return originCache(fetchOption);
       };
     },
     watchAfter(originAfter = () => {}) {
